@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Regra Global de Segurança: O usuário só acessa o seu próprio documento e suas subcoleções
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      match /accounts/{accountId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /transactions/{transactionId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /goals/{goalId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /bills/{billId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /investments/{investmentId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // Bloqueia qualquer acesso externo não mapeado explicitamente
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

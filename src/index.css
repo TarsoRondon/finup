@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-bg-primary: #0E0E0C;
+    --color-bg-surface: #181816;
+    --color-bg-card: #22221F;
+    --color-border: #2E2E2A;
+    --color-primary: #00A878;
+    --color-primary-hover: #008f66;
+    --color-text-main: #FFFFFF;
+    --color-text-muted: #9C9C98;
+  }
+
+  html.light {
+    --color-bg-primary: #F8F8F6;
+    --color-bg-surface: #FFFFFF;
+    --color-bg-card: #F2F2EF;
+    --color-border: #E4E4E0;
+    --color-primary: #00A878;
+    --color-primary-hover: #008f66;
+    --color-text-main: #111111;
+    --color-text-muted: #5F5F5F;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #0E0E0C;
+  color: #FFFFFF;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.light body {
+  background-color: #F8F8F6;
+  color: #111111;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #333330;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00A878;
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Print styling for PDF export */
+@media print {
+  aside, nav, header, .no-print, button:not(.print-include) {
+    display: none !important;
+  }
+  body, main {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+  .print-area {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
