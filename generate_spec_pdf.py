@@ -472,6 +472,96 @@ def build_pdf():
     story.append(t_stack)
     story.append(Spacer(1, 14))
 
+    # Page Break for Section 9: Instalação e Execução
+    story.append(PageBreak())
+
+    # 9. Instalação e Execução
+    story.append(Paragraph("9. Instalação e Execução", h1_style))
+    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#00A878"), spaceAfter=8))
+    story.append(Paragraph("Guia determinístico para clonar, configurar o banco de dados e executar o FinUp localmente do zero:", body_style))
+
+    # 9.1 Ambiente
+    story.append(Paragraph("9.1 Ambiente de Desenvolvimento", h2_style))
+    env_items = [
+        "<b>Linguagem e Runtime:</b> Node.js v20.x ou superior (LTS recomendado: Node 20 / 22) e npm v10.x.",
+        "<b>Servidor / Ambiente Local:</b> Servidor de desenvolvimento rápido do Vite (<code>npm run dev</code>).",
+        "<b>Bibliotecas e Dependências:</b> Instaladas via <code>npm install</code> (React 19, Zustand, Tailwind v4, Firebase SDK).",
+        "<b>Sistema Operacional Homologado:</b> Windows 11 (PowerShell) e distribuições Linux (Debian / Ubuntu / macOS)."
+    ]
+    for it in env_items:
+        story.append(Paragraph(f"• {it}", bullet_style))
+    story.append(Spacer(1, 6))
+
+    # 9.2 Banco de Dados
+    story.append(Paragraph("9.2 Banco de Dados e Script SQL", h2_style))
+    db_items = [
+        "<b>SGBD Compatível:</b> MySQL 8.0+, MariaDB 10.5+ ou PostgreSQL 14+ (relacional) e Google Cloud Firestore (nuvem).",
+        "<b>Nome do Banco de Dados:</b> <code>finup_db</code>",
+        "<b>Caminho do Script SQL no Repositório:</b> <code>database/schema.sql</code>",
+        "<b>Comando de Importação (Terminal):</b> <code>mysql -u root -p finup_db &lt; database/schema.sql</code> (ou via phpMyAdmin / DBeaver).",
+        "<b>Dados Iniciais (Seed):</b> O script SQL <b>já insere automaticamente</b> o usuário avaliador (<code>avaliador.ifro@finup.com</code>), categorias, transações, boletos com código de barras, cartões e investimentos."
+    ]
+    for it in db_items:
+        story.append(Paragraph(f"• {it}", bullet_style))
+    story.append(Spacer(1, 6))
+
+    # Tabela descritiva de entidades
+    db_table_data = [
+        [Paragraph("Tabela", table_cell_header), Paragraph("Campos Principais", table_cell_header), Paragraph("Chave Primária", table_cell_header), Paragraph("Relacionamentos (FK)", table_cell_header)],
+        [Paragraph("<b>usuarios</b>", table_cell_bold), Paragraph("id, nome_completo, email, senha_hash, perfil, tema_preferido", table_cell), Paragraph("id", table_cell), Paragraph("—", table_cell)],
+        [Paragraph("<b>categorias</b>", table_cell_bold), Paragraph("id, id_usuario, nome, tipo, icone, cor", table_cell), Paragraph("id", table_cell), Paragraph("id_usuario → usuarios.id", table_cell)],
+        [Paragraph("<b>transacoes</b>", table_cell_bold), Paragraph("id, id_usuario, id_categoria, descricao, valor, tipo, status", table_cell), Paragraph("id", table_cell), Paragraph("id_usuario → usuarios.id<br/>id_categoria → categorias.id", table_cell)],
+        [Paragraph("<b>boletos</b>", table_cell_bold), Paragraph("id, id_usuario, titulo, valor, vencimento, codigo_barras, status", table_cell), Paragraph("id", table_cell), Paragraph("id_usuario → usuarios.id", table_cell)],
+        [Paragraph("<b>cartoes</b>", table_cell_bold), Paragraph("id, id_usuario, tipo_cartao, ultimos_digitos, limite_total, limite_usado", table_cell), Paragraph("id", table_cell), Paragraph("id_usuario → usuarios.id", table_cell)],
+        [Paragraph("<b>metas</b>", table_cell_bold), Paragraph("id, id_usuario, titulo, valor_alvo, valor_atual, data_prazo", table_cell), Paragraph("id", table_cell), Paragraph("id_usuario → usuarios.id", table_cell)],
+        [Paragraph("<b>investimentos</b>", table_cell_bold), Paragraph("id, id_usuario, ticker_ativo, tipo_ativo, quantidade, preco_medio", table_cell), Paragraph("id", table_cell), Paragraph("id_usuario → usuarios.id", table_cell)]
+    ]
+    t_dbtable = Table(db_table_data, colWidths=[70, 204, 80, 150])
+    t_dbtable.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#00A878")),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor("#CBD5E1")),
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor("#F8FAFC")]),
+        ('PADDING', (0,0), (-1,-1), 3.5),
+    ]))
+    story.append(t_dbtable)
+    story.append(Spacer(1, 8))
+
+    # 9.3 Variáveis de Ambiente
+    story.append(Paragraph("9.3 Variáveis de Ambiente (.env.example)", h2_style))
+    story.append(Paragraph("O repositório contém o arquivo modelo <code>.env.example</code>. O sistema possui contingência automática: caso o avaliador execute sem preencher credenciais externas, o FinUp ativa a camada inteligente de mock e o Modo Demonstração sem gerar falhas.", body_style))
+
+    # 9.4 Passo a Passo
+    story.append(Paragraph("9.4 Passo a Passo de Instalação", h2_style))
+    steps = [
+        "<b>1. Clonar repositório:</b> <code>git clone https://github.com/TarsoRondon/finup.git</code>",
+        "<b>2. Entrar na pasta:</b> <code>cd finup</code>",
+        "<b>3. Instalar dependências:</b> <code>npm install</code>",
+        "<b>4. Importar banco de dados:</b> <code>mysql -u root -p finup_db &lt; database/schema.sql</code>",
+        "<b>5. Copiar variáveis de ambiente:</b> <code>cp .env.example .env</code> (ou Copy-Item no PowerShell)",
+        "<b>6. Iniciar servidor:</b> <code>npm run dev</code>",
+        "<b>7. Acessar no navegador:</b> <code>http://localhost:5173</code>"
+    ]
+    for st in steps:
+        story.append(Paragraph(st, bullet_style))
+    story.append(Spacer(1, 6))
+
+    # 9.5 Como Testar
+    story.append(Paragraph("9.5 Como Testar o Sistema", h2_style))
+    test_info = (
+        "• <b>Usuário de Teste / Avaliador:</b> Clique no botão <b>'Acesso Demo (Modo Demonstração)'</b> para login VIP instantâneo com dados pré-carregados, ou informe <code>avaliador.ifro@finup.com</code> / senha <code>Ifro@2026</code>.<br/>"
+        "• <b>Roteiro de Validação do Fluxo Principal:</b><br/>"
+        "&nbsp;&nbsp;1. <b>Dashboard:</b> Verifique o ticker de cotações ao vivo (PETR4, VALE3, BTC, USD).<br/>"
+        "&nbsp;&nbsp;2. <b>Pix 24/7:</b> Envie um Pix de R$ 250 e confirme o débito e a emissão do Comprovante Bacen com ID único.<br/>"
+        "&nbsp;&nbsp;3. <b>Boletos:</b> Pague o boleto da <i>Energisa RO</i> e veja a quitação em tempo real.<br/>"
+        "&nbsp;&nbsp;4. <b>Cartões:</b> Bloqueie o cartão virtual em 1 clique e quite a fatura restabelecendo o limite.<br/>"
+        "&nbsp;&nbsp;5. <b>Metas:</b> Realize um aporte rápido de +R$ 500 e veja a barra percentual avançar.<br/>"
+        "&nbsp;&nbsp;6. <b>Extrato:</b> Clique em 'Exportar CSV' para baixar a planilha UTF-8 formatada para Excel.<br/>"
+        "• <b>Limitações Conhecidas:</b> O Open Finance bancário direto utiliza dados sandbox; sem chaves no .env, o sistema opera em contingência transparente."
+    )
+    story.append(Paragraph(test_info, bullet_style))
+    story.append(Spacer(1, 10))
+
     # Concluding Note
     concl_data = [
         [

@@ -194,4 +194,146 @@ O modelo relacional lógico do banco de dados (implementado no Cloud Firestore e
 | **Destino de Deploy & CI/CD** | **Vercel / Firebase Hosting + GitHub Actions** | O repositório está versionado e conectado à branch `main` no GitHub ([https://github.com/TarsoRondon/finup](https://github.com/TarsoRondon/finup)). O deploy na Vercel compila o frontend estático via `npm run build` gerando distribuição global por CDN com certificado SSL/HTTPS automático gratuito. |
 
 ---
+
+## 9. Instalação e Execução
+
+Esta seção fornece o guia completo e determinístico para clonar, configurar, importar o banco de dados e executar o FinUp localmente do zero em qualquer computador de avaliação, sem necessidade de suporte externo.
+
+### 9.1 Ambiente
+- **Linguagem e Runtime:** Node.js v20.x ou superior (LTS recomendado: Node 20 / 22) e npm v10.x.
+- **Servidor / Ambiente Local:** Servidor de desenvolvimento rápido do Vite (`npm run dev`) baseado em ES Modules.
+- **Bibliotecas e Dependências:** Instaladas via `npm install` (inclui React 19, Lucide React, Zustand, TailwindCSS v4, Firebase SDK v11).
+- **Sistema Operacional Homologado:** Testado e validado em Windows 11 (PowerShell / Windows Terminal) e distribuições Linux baseadas em Debian/Ubuntu.
+
+### 9.2 Banco de Dados
+- **SGBD Compatível:** MySQL 8.0+, MariaDB 10.5+ ou PostgreSQL 14+ (para o modelo relacional de entrega da disciplina) e Google Cloud Firestore (para a instância cloud serverless em tempo real).
+- **Nome do Banco de Dados a Criar:** `finup_db`
+- **Caminho do Script SQL no Repositório:** `database/schema.sql`
+- **Como Executar o Script SQL:**
+  - *Via Terminal MySQL:*
+    ```bash
+    mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS finup_db;"
+    mysql -u root -p finup_db < database/schema.sql
+    ```
+  - *Via Ferramenta Gráfica (phpMyAdmin / MySQL Workbench / DBeaver):*
+    1. Abra o gerenciador de banco de dados;
+    2. Crie o schema `finup_db` com charset `utf8mb4`;
+    3. Abra a aba de execução SQL, carregue o arquivo `database/schema.sql` e clique em **Executar / Run**.
+
+#### Tabela Descritiva das Entidades do Banco de Dados:
+
+| Tabela | Campos Principais | Chave Primária (PK) | Relacionamentos (FK) |
+| :--- | :--- | :--- | :--- |
+| **usuarios** | id, nome_completo, email, senha_hash, perfil, tema_preferido, data_cadastro | `id` | — |
+| **categorias** | id, id_usuario, nome, tipo, icone, cor | `id` | `id_usuario` → `usuarios.id` |
+| **transacoes** | id, id_usuario, id_categoria, descricao, valor, tipo, status, metodo_pagamento, autenticacao_bacen, data_registro | `id` | `id_usuario` → `usuarios.id`<br/>`id_categoria` → `categorias.id` |
+| **boletos** | id, id_usuario, titulo, valor, vencimento, codigo_barras, status_pagamento, data_baixa | `id` | `id_usuario` → `usuarios.id` |
+| **cartoes** | id, id_usuario, tipo_cartao, titular_nome, ultimos_digitos, limite_total, limite_usado, bloqueado, dia_fechamento, dia_vencimento | `id` | `id_usuario` → `usuarios.id` |
+| **metas** | id, id_usuario, titulo, valor_alvo, valor_atual, data_prazo, icone_badge | `id` | `id_usuario` → `usuarios.id` |
+| **investimentos** | id, id_usuario, ticker_ativo, tipo_ativo, quantidade, preco_medio, preco_mercado, data_aquisicao | `id` | `id_usuario` → `usuarios.id` |
+
+- **Dados Iniciais (Seed):** O arquivo `database/schema.sql` **já insere automaticamente** o usuário de testes do avaliador (`avaliador.ifro@finup.com`), 7 categorias financeiras padrão, 6 transações com comprovantes Bacen, 3 boletos com código de barras, 2 cartões de crédito, 3 metas de economia e 4 ativos de investimento custodiados.
+
+---
+
+### 9.3 Variáveis de Ambiente
+
+O repositório contém o arquivo modelo `.env.example`. Para rodar localmente, copie-o para `.env` ou `.env.local`:
+
+```ini
+# Configurações do Firebase (Opcional para Modo Demo; Obrigatório para Login Firebase Nuvem)
+VITE_FIREBASE_API_KEY=sua_api_key_aqui
+VITE_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=seu-projeto
+VITE_FIREBASE_STORAGE_BUCKET=seu-projeto.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
+VITE_FIREBASE_APP_ID=1:123456789:web:abc123def456
+
+# APIs de Mercado Financeiro (Opcionais - o sistema possui fallback automático integrado)
+VITE_BRAPI_TOKEN=seu_token_brapi
+VITE_COINGECKO_API_KEY=sua_chave_coingecko
+```
+
+* **Nota de Resiliência:** Nenhuma chave real é necessária para a avaliação do professor. Caso as variáveis de nuvem não estejam preenchidas, o FinUp ativa automaticamente a camada de Mock Inteligente e o Modo Demonstração, permitindo testar 100% dos recursos sem falhas de rede.
+
+---
+
+### 9.4 Passo a Passo de Instalação e Execução
+
+Siga os comandos abaixo no terminal (PowerShell, Bash ou Zsh):
+
+1. **Clonar o Repositório do GitHub:**
+   ```bash
+   git clone https://github.com/TarsoRondon/finup.git
+   ```
+
+2. **Entrar no Diretório do Projeto:**
+   ```bash
+   cd finup
+   ```
+
+3. **Instalar as Dependências do Node:**
+   ```bash
+   npm install
+   ```
+
+4. **(Opcional) Importar o Banco de Dados Relacional:**
+   ```bash
+   mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS finup_db;"
+   mysql -u root -p finup_db < database/schema.sql
+   ```
+
+5. **Criar o Arquivo de Variáveis de Ambiente:**
+   ```bash
+   # No Windows PowerShell:
+   Copy-Item .env.example .env
+   # No Linux / macOS:
+   cp .env.example .env
+   ```
+
+6. **Iniciar o Servidor Local de Desenvolvimento:**
+   ```bash
+   npm run dev
+   ```
+
+7. **Acessar a Aplicação no Navegador:**
+   Abra a URL exibida no terminal:
+   ```
+   http://localhost:5173
+   ```
+
+---
+
+### 9.5 Como Testar o Sistema
+
+#### A. Acesso Instantâneo e Usuário de Teste:
+1. Ao carregar a tela inicial (`http://localhost:5173`), clique no botão destacado **"Acesso Demo (Modo Demonstração)"**.
+2. O sistema inicializa a sessão autenticada VIP pré-carregada do avaliador (`avaliador.ifro@finup.com`) com saldo inicial de R$ 12.450,00, sem exigir senhas de digitação.
+3. Se desejar testar a autenticação real por formulário, selecione a aba "Entrar" e informe:
+   - **E-mail:** `avaliador.ifro@finup.com`
+   - **Senha:** `Ifro@2026`
+
+#### B. Roteiro do Fluxo Principal de Testes:
+1. **Dashboard & Cotações:** Visualize no topo as cotações em tempo real de Petrobras, Vale, Dólar e Bitcoin. Alterne entre os filtros de período e oculte o saldo com o ícone do "olho".
+2. **Fluxo Pix com Comprovante (RF05/RF06):**
+   - Acesse a aba **"Pix"** no menu lateral.
+   - Digite uma chave Pix qualquer (ex.: CPF ou e-mail fictício) e um valor (ex.: `R$ 250,00`).
+   - Clique em **"Confirmar Envio Pix"**. O saldo do dashboard é debitado imediatamente e um **Comprovante Bacen com ID único de autenticação** é exibido na tela, com botão de impressão.
+3. **Liquidação de Boletos (RF08/RF09):**
+   - Acesse a aba **"Boletos"**.
+   - Localize o boleto pendente da *Energisa RO* e clique em **"Pagar Agora"**.
+   - O sistema valida o código de barras, debita o valor do saldo em conta e altera o status para **"Pago"**, criando um lançamento correspondente no extrato.
+4. **Cartões de Crédito (RF10/RF11):**
+   - Acesse **"Cartões"**, clique em **"Bloquear Cartão"** e veja o status alternar em tempo real.
+   - Clique em **"Pagar Fatura"** para liquidar o limite utilizado e restaurar o crédito total disponível.
+5. **Metas Financeiras (RF17):**
+   - Acesse **"Metas"** e clique no botão de aporte rápido `+ R$ 500`. A barra de progresso da meta avança instantaneamente e o saldo corrente é debitado.
+6. **Exportação de Extrato (RF14):**
+   - Acesse a aba **"Transações"** e clique no botão **"Exportar CSV"**. O navegador baixa imediatamente a planilha com cabeçalhos em UTF-8 BOM compatível com Excel.
+
+#### C. Problemas Conhecidos e Limitações:
+- As conexões com APIs de bancos reais (Pluggy Open Finance) requerem credenciais ativas do sandbox da Pluggy no arquivo `.env`. Em ambiente local sem chaves ativas, o sistema opera em modo de contingência inteligente garantindo que nenhuma tela trave ou exiba erros 500 para o usuário.
+
+---
 *Documento elaborado e atualizado em total conformidade com a atividade avaliativa da disciplina de Desenvolvimento de Sistemas — IFRO Calama.*
+
