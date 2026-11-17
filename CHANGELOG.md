@@ -52,6 +52,11 @@ Conforme ensinado na apostila, o agente de IA atua como um assistente de código
 
 ## 📅 Histórico de Versões e Commits
 
+### [v2.4.1] — 17/11/2026 (Publicação em Produção e Homologação)
+* **Deploy no Ar:** Publicação oficial e bem-sucedida do sistema na Vercel no link: `https://finup-chi.vercel.app`.
+* **Spec Final e Documentação:** Atualização da `spec.md`, `generate_spec_pdf.py` e `spec.pdf` com o link de produção e roteiro de testes sem instalação.
+* **Colaborador GitHub:** Confirmação do convite ao professor `@rafaelpitwak` para auditoria do repositório.
+
 ### [v2.4.0] — 20/10/2026 (Versão Final de Entrega)
 * **Docs & Avaliação:** Criação do script de banco de dados relacional oficial `database/schema.sql` com tabelas, PKs, FKs e sementes iniciais de teste (seed).
 * **Spec Final:** Adição da **Seção 9: Instalação e Execução** detalhando ambiente, SGBD, variáveis de ambiente, passo a passo do `git clone` e roteiro de testes.

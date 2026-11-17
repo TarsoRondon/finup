@@ -2,6 +2,7 @@
 *Sistema de Gestão Financeira Pessoal, Open Finance, Operações Bancárias e Investimentos*
 
 > **Repositório Oficial no GitHub:** [https://github.com/TarsoRondon/finup](https://github.com/TarsoRondon/finup)  
+> **Sistema Publicado no Ar (Vercel):** [https://finup-chi.vercel.app](https://finup-chi.vercel.app)  
 > **Instituição:** Instituto Federal de Rondônia (IFRO) — Campus Porto Velho Calama  
 > **Componente Curricular:** Desenvolvimento de Sistemas (Ensino Médio Técnico em Informática)  
 > **Aluno / Desenvolvedor:** Tarso Rondon  
@@ -191,7 +192,7 @@ O modelo relacional lógico do banco de dados (implementado no Cloud Firestore e
 | **Autenticação & Banco de Dados** | **Firebase Auth & Cloud Firestore** | Serviço Serverless em nuvem do Google. O Auth elimina riscos de armazenamento incorreto de credenciais ao gerenciar hashes de senha seguros; o Firestore fornece banco NoSQL em tempo real com regras de segurança ativas no servidor. |
 | **Backend & Camada BFF** | **Firebase Cloud Functions (TypeScript / Node.js 20)** | Funções Serverless que atuam como Backend-for-Frontend. Garantem que requisições às APIs da Pluggy, Brapi e CoinGecko sejam intermediadas em ambiente seguro sem expor credenciais privadas no código do cliente. |
 | **APIs Externas Integradas** | **AwesomeAPI, CoinGecko & Brapi.dev** | Fornecem cotações de alta disponibilidade em tempo real para Bitcoin, Ethereum, moedas de câmbio internacional (USD/EUR) e ações negociadas na B3. |
-| **Destino de Deploy & CI/CD** | **Vercel / Firebase Hosting + GitHub Actions** | O repositório está versionado e conectado à branch `main` no GitHub ([https://github.com/TarsoRondon/finup](https://github.com/TarsoRondon/finup)). O deploy na Vercel compila o frontend estático via `npm run build` gerando distribuição global por CDN com certificado SSL/HTTPS automático gratuito. |
+| **Destino de Deploy & CI/CD** | **Vercel / Firebase Hosting + GitHub Actions** | O repositório está versionado e conectado à branch `main` no GitHub ([https://github.com/TarsoRondon/finup](https://github.com/TarsoRondon/finup)). A aplicação está **publicada e em produção na Vercel** no endereço oficial: [https://finup-chi.vercel.app](https://finup-chi.vercel.app), com build estático contínuo via `npm run build` e certificado SSL/HTTPS automático gratuito. |
 
 ---
 
@@ -306,14 +307,18 @@ Siga os comandos abaixo no terminal (PowerShell, Bash ou Zsh):
 
 ### 9.5 Como Testar o Sistema
 
-#### A. Acesso Instantâneo e Usuário de Teste:
-1. Ao carregar a tela inicial (`http://localhost:5173`), clique no botão destacado **"Acesso Demo (Modo Demonstração)"**.
+#### A. Acesso Online (Sem Instalação) ou Local:
+- **Link do Sistema Publicado:** [https://finup-chi.vercel.app](https://finup-chi.vercel.app) (pode ser aberto diretamente em aba anônima no celular ou computador, sem instalar nada).
+- **Ambiente Local:** Caso execute localmente após o passo a passo, acesse `http://localhost:5173`.
+
+#### B. Usuário de Teste / Avaliador:
+1. Ao carregar a tela inicial (online em `https://finup-chi.vercel.app` ou local em `http://localhost:5173`), clique no botão destacado **"Acesso Demo (Modo Demonstração)"**.
 2. O sistema inicializa a sessão autenticada VIP pré-carregada do avaliador (`avaliador.ifro@finup.com`) com saldo inicial de R$ 12.450,00, sem exigir senhas de digitação.
 3. Se desejar testar a autenticação real por formulário, selecione a aba "Entrar" e informe:
    - **E-mail:** `avaliador.ifro@finup.com`
    - **Senha:** `Ifro@2026`
 
-#### B. Roteiro do Fluxo Principal de Testes:
+#### C. Roteiro do Fluxo Principal de Testes:
 1. **Dashboard & Cotações:** Visualize no topo as cotações em tempo real de Petrobras, Vale, Dólar e Bitcoin. Alterne entre os filtros de período e oculte o saldo com o ícone do "olho".
 2. **Fluxo Pix com Comprovante (RF05/RF06):**
    - Acesse a aba **"Pix"** no menu lateral.
@@ -331,7 +336,7 @@ Siga os comandos abaixo no terminal (PowerShell, Bash ou Zsh):
 6. **Exportação de Extrato (RF14):**
    - Acesse a aba **"Transações"** e clique no botão **"Exportar CSV"**. O navegador baixa imediatamente a planilha com cabeçalhos em UTF-8 BOM compatível com Excel.
 
-#### C. Problemas Conhecidos e Limitações:
+#### D. Problemas Conhecidos e Limitações:
 - As conexões com APIs de bancos reais (Pluggy Open Finance) requerem credenciais ativas do sandbox da Pluggy no arquivo `.env`. Em ambiente local sem chaves ativas, o sistema opera em modo de contingência inteligente garantindo que nenhuma tela trave ou exiba erros 500 para o usuário.
 
 ---

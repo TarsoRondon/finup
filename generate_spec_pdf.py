@@ -49,7 +49,7 @@ class NumberedCanvas(canvas.Canvas):
         self.line(54, 45, 558, 45)
         self.setFont("Helvetica", 8)
         self.setFillColor(colors.HexColor("#7A7A75"))
-        self.drawString(54, 32, "FinUp · GitHub: https://github.com/TarsoRondon/finup")
+        self.drawString(54, 32, "FinUp · GitHub: github.com/TarsoRondon/finup · Online: finup-chi.vercel.app")
         self.drawRightString(558, 32, f"Página {self._pageNumber} de {page_count}")
         self.restoreState()
 
@@ -176,9 +176,10 @@ def build_pdf():
     meta_data = [
         [
             Paragraph("<b>Repositório Oficial no GitHub:</b> <font color='#0066cc'><u>https://github.com/TarsoRondon/finup</u></font><br/>"
+                      "<b>Sistema Publicado no Ar (Vercel):</b> <font color='#00A878'><u>https://finup-chi.vercel.app</u></font><br/>"
                       "<b>Instituição:</b> Instituto Federal de Rondônia (IFRO) — Campus Porto Velho Calama<br/>"
                       "<b>Componente Curricular:</b> Desenvolvimento de Sistemas | <b>Docente:</b> Prof. Rafael Pitwak<br/>"
-                      "<b>Aluno / Desenvolvedor:</b> Tarso Rondon | <b>Data de Atualização:</b> Outubro / 2026", callout_style)
+                      "<b>Aluno / Desenvolvedor:</b> Tarso Rondon | <b>Data de Atualização:</b> Novembro / 2026", callout_style)
         ]
     ]
     t_meta = Table(meta_data, colWidths=[504])
@@ -458,7 +459,7 @@ def build_pdf():
         [
             Paragraph("<b>Deploy & CI/CD</b>", table_cell_bold),
             Paragraph("Vercel / Firebase Hosting + GitHub Actions", table_cell),
-            Paragraph("Repositório versionado e conectado à branch main no GitHub (<font color='#0066cc'><u>https://github.com/TarsoRondon/finup</u></font>). O deploy compila o frontend estático via 'npm run build' gerando distribuição global por CDN com certificado SSL/HTTPS automático gratuito.", table_cell)
+            Paragraph("Repositório versionado e conectado à branch main no GitHub (<font color='#0066cc'><u>https://github.com/TarsoRondon/finup</u></font>). Aplicação publicada e em produção no link oficial: <font color='#00A878'><u>https://finup-chi.vercel.app</u></font>, com distribuição global por CDN e certificado SSL/HTTPS automático gratuito.", table_cell)
         ]
     ]
     t_stack = Table(stack_data, colWidths=[110, 120, 274])
@@ -549,6 +550,7 @@ def build_pdf():
     # 9.5 Como Testar
     story.append(Paragraph("9.5 Como Testar o Sistema", h2_style))
     test_info = (
+        "• <b>Acesso Online (Sem Instalação):</b> Acesse diretamente o sistema no ar: <font color='#00A878'><u>https://finup-chi.vercel.app</u></font> (pronto para uso em qualquer navegador ou celular).<br/>"
         "• <b>Usuário de Teste / Avaliador:</b> Clique no botão <b>'Acesso Demo (Modo Demonstração)'</b> para login VIP instantâneo com dados pré-carregados, ou informe <code>avaliador.ifro@finup.com</code> / senha <code>Ifro@2026</code>.<br/>"
         "• <b>Roteiro de Validação do Fluxo Principal:</b><br/>"
         "&nbsp;&nbsp;1. <b>Dashboard:</b> Verifique o ticker de cotações ao vivo (PETR4, VALE3, BTC, USD).<br/>"
